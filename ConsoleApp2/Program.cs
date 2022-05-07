@@ -17,7 +17,10 @@ namespace ConsoleApp2
                         new BinTreeNode<char>('G')
                      );
             var t = new BinTreeNode<char>('A', tB, tC);
-            Console.WriteLine(Depth(t));
+            Print(t);
+            Console.WriteLine("--------");
+            DoMirrorOfTree(t);
+            Print(t);
         }
         public static BinTreeNode<char> CreateTreeOfChars()
         {
@@ -60,6 +63,14 @@ namespace ConsoleApp2
             {
                 return Math.Max(Depth(tree.Left), Depth(tree.Right))+1;
             }
+        }
+        public static void DoMirrorOfTree<T>(BinTreeNode<T> tree)
+        {
+            if (tree == null) return;
+            List <T> tab = new List<T>();
+            DoMirrorOfTree(tree.Left);
+            tab.Add(tree.Value);
+            DoMirrorOfTree(tree.Right);
         }
         public static void Print<T>(BinTreeNode<T> p, int level = 0)
         {
