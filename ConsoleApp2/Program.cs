@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace ConsoleApp2
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
             var tB = new BinTreeNode<char>('B');
             tB.Left = new BinTreeNode<char>('D');
@@ -17,11 +17,29 @@ namespace ConsoleApp2
                         new BinTreeNode<char>('G')
                      );
             var t = new BinTreeNode<char>('A', tB, tC);
-            Print(t);
-            Console.WriteLine("--------");
-            DoMirrorOfTree(t);
-            Print(t);
+            var list = GetTraversePreorder(t);
+            Console.WriteLine(string.Join(',', list));
         }
+
+        public static void TraversePreOrder<T>(BinTreeNode<T> tree, Action<T> action)
+        {
+            if (tree == null) return;
+            action(tree.Value);
+            TraversePreOrder(tree.Left, action);
+            TraversePreOrder(tree.Right, action);
+        }
+
+        public static List<T> GetTraversePreorder<T>(BinTreeNode<T> tree)
+        {
+            List<T> ts = new List<T>();
+
+            Action<T> action = delegate (T a) { ts.Add(a); };
+
+            TraversePreOrder<T>(tree, action);
+
+            return ts;
+        }
+
         public static BinTreeNode<char> CreateTreeOfChars()
         {
             BinTreeNode<char> tree = new BinTreeNode<char>('A');
@@ -35,6 +53,7 @@ namespace ConsoleApp2
             tree.Right.Left.Right = new BinTreeNode<char>('I');
             return tree;
         }
+
         public static void PrintTree<T>(BinTreeNode<T> p, int level = 0)
         {
             if (p == null) return;
@@ -42,6 +61,7 @@ namespace ConsoleApp2
             PrintTree(p.Left, level + 1);
             PrintTree(p.Right, level + 1);
         }
+
         public static int NoOfNodes<T>(BinTreeNode<T> tree)
         {
             int i = 1;
@@ -51,8 +71,9 @@ namespace ConsoleApp2
                 i += NoOfNodes(tree.Left);
                 i += NoOfNodes(tree.Right);
                 return i;
-            }    
+            }
         }
+
         public static int Depth<T>(BinTreeNode<T> tree)
         {
             if (tree == null)
@@ -61,17 +82,23 @@ namespace ConsoleApp2
             }
             else
             {
-                return Math.Max(Depth(tree.Left), Depth(tree.Right))+1;
+                return Math.Max(Depth(tree.Left), Depth(tree.Right)) + 1;
             }
         }
+
         public static void DoMirrorOfTree<T>(BinTreeNode<T> tree)
         {
             if (tree == null) return;
-            List <T> tab = new List<T>();
+
             DoMirrorOfTree(tree.Left);
-            tab.Add(tree.Value);
+
             DoMirrorOfTree(tree.Right);
+            BinTreeNode<T> binTree = new BinTreeNode<T>(default(T));
+            binTree.Left = tree.Left;
+            tree.Left = tree.Right;
+            tree.Right = binTree.Left;
         }
+
         public static void Print<T>(BinTreeNode<T> p, int level = 0)
         {
             if (p == null) return;
@@ -80,6 +107,7 @@ namespace ConsoleApp2
             Print(p.Left, level + 1);
         }
     }
+
     public class BinTreeNode<T>
     {
         public T Value { get; set; }
@@ -93,5 +121,4 @@ namespace ConsoleApp2
             Right = right;
         }
     }
-
 }
